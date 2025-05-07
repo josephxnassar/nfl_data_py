@@ -1,4 +1,4 @@
-# NFL Depth Chart and Statistics Tool
+# NFL Data Analysis Tool
 
 This project provides a suite of tools to collect, process, and analyze NFL player depth charts and statistics from multiple sources. It integrates data from **nfl_data_py**, ESPN, and performs rating calculations via ridge regression. It also provides the ability to export processed data to Excel.
 
