@@ -55,7 +55,6 @@ Your codebase should be structured something like:
 
 ```
 project-core/
-│
 ├── regression.py
 ├── excel.py
 ├── schedules.py
