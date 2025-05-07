@@ -114,4 +114,3 @@ Each module's documentation can be found in the respective Markdown files:
 ## 👨‍💻 Author
 
 Created by Joseph Nassar, 2025  
-Computer Science @ Washington State University | NFL Analytics Enthusiast
