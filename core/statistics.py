@@ -7,8 +7,6 @@ from urllib.error import HTTPError
 import inspect
 import sys
 
-from itertools import chain
-
 from .regression import Regression
 
 class Statistics:
