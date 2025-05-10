@@ -6,3 +6,4 @@ beautifulsoup4
 requests
 xlwings
 pytest
+pytest-mock
