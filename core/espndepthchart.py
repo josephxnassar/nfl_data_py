@@ -8,10 +8,7 @@ import requests
 from bs4 import BeautifulSoup
 
 import time
-
 import random
-
-from .schedules import Schedules
 
 class ESPNDepthChart:
     def __init__(self):
