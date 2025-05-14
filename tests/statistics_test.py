@@ -39,26 +39,21 @@ def sample_snaps():
 def test_create_key(mock_nfl_imports: MockerFixture, sample_roster: pd.DataFrame):
     mock_nfl_imports.patch("core.statistics.nfl.import_seasonal_rosters", return_value=sample_roster)
     stats = Statistics([2021])
-
     assert stats.key['id1'] == ('Player One', 'QB')
     assert stats.player_to_pfr['id2'] == 'pfr2'
 
 def test_get_seasonal_data(mock_nfl_imports: MockerFixture, sample_seasonal: pd.DataFrame):
     mock_nfl_imports.patch("core.statistics.nfl.import_seasonal_data", return_value=sample_seasonal)
-
     stats = Statistics.__new__(Statistics)
     stats.seasons = [2021]
     df = stats._get_seasonal_data()
-
     assert 'player_id' in df.columns
 
 def test_get_snap_counts(mock_nfl_imports: MockerFixture, sample_snaps: pd.DataFrame):
     mock_nfl_imports.patch("core.statistics.nfl.import_snap_counts", return_value=sample_snaps)
-
     stats = Statistics.__new__(Statistics)
     stats.seasons = [2021]
     df = stats._get_snap_counts()
-
     assert 'offense_pct' in df.columns
 
 def test_merge_creates_correct_df(mocker: MockerFixture, sample_seasonal: pd.DataFrame, sample_snaps: pd.DataFrame):
@@ -67,7 +62,6 @@ def test_merge_creates_correct_df(mocker: MockerFixture, sample_seasonal: pd.Dat
     stats.snap_counts = sample_snaps.groupby('pfr_player_id').mean().reset_index()
     stats.player_to_pfr = defaultdict(lambda: None, {'id1': 'pfr1', 'id2': 'pfr2'})
     df = stats._merge()
-
     assert 'offense_pct' in df.columns
 
 def test_partition_groups_by_position():
@@ -78,7 +72,6 @@ def test_partition_groups_by_position():
                        'fantasy_points_ppr': [220, 170]})
     df = df.set_index('player_id').reset_index()
     result = stats._partition(df)
-    
     assert 'QB' in result
     assert 'RB' in result
     assert 'Player One' in result['QB'].index
@@ -96,12 +89,10 @@ def test_create_ratings_calls_regression(mocker: MockerFixture):
     mock_regression = mocker.patch("core.statistics.Regression")
     instance = mock_regression.return_value
     instance.get_ratings.return_value = pd.DataFrame({'player_name': ['a'], 'rating': [1.0]})
-
     stats = Statistics.__new__(Statistics)
     df = pd.DataFrame({'fantasy_points': [100, 200],
                        'fantasy_points_ppr': [110, 210],
                        'stat1': [5, 10]}, index = ['Player A', 'Player B'])
-
     result = stats._create_ratings(df)
     assert 'rating' in result.columns
     mock_regression.assert_called_once()
@@ -110,12 +101,10 @@ def test_get_statistics_pipeline(mocker: MockerFixture, sample_roster: pd.DataFr
     mocker.patch("core.statistics.nfl.import_seasonal_rosters", return_value = sample_roster)
     mocker.patch("core.statistics.nfl.import_seasonal_data", return_value = sample_seasonal)
     mocker.patch("core.statistics.nfl.import_snap_counts", return_value = sample_snaps)
-
     mock_regression = mocker.patch("core.statistics.Regression")
     mock_instance = mock_regression.return_value
     mock_instance.get_ratings.return_value = pd.DataFrame({'player_name': ['Player One', 'Player Two'],
                                                            'rating': [1.0, 0.5]}).set_index('player_name')
-
     stats = Statistics([2021])
     result = stats.get_statistics()
     assert 'QB' in result or 'RB' in result
