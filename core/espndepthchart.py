@@ -66,8 +66,8 @@ class ESPNDepthChart:
                              '3rd':      g[2] if len(g) > 2 else None,
                              '4th':      g[3] if len(g) > 3 else None})
 
-        return pd.DataFrame(rows).set_index("Position").replace(r'([A-Za-z\s\-\.]+)([A-Z])$', r'\1', regex=True)
-    
+        return pd.DataFrame(rows).set_index("Position").replace(r'(Q|D|O|IR|PUP|NFI|SUS)$', '', regex=True)
+
     def get_depth_charts(self) -> dict:
         rosters = {}
         for team in self.teams:
