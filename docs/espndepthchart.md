@@ -1,6 +1,6 @@
 # `ESPNDepthChart` Class
 
-The [`ESPNDepthChart`](../core/espndepthchart.py) class scrapes *updated* team depth charts from ESPN's website. It supports generating team-by-team rosters and their depth chart order for relevant offensive positions.
+The [`ESPNDepthChart`](../source/espndepthchart.py) class scrapes *updated* team depth charts from ESPN's website. It supports generating team-by-team rosters and their depth chart order for relevant offensive positions.
 
 ---
 
@@ -81,8 +81,8 @@ Constructs depth charts for all NFL teams defined in `self.teams`. Each request 
 ## Example Usage
 
 ```python
-from core import ESPNDepthChart
-from core import Excel
+from source import ESPNDepthChart
+from source import Excel
 
 espn = ESPNDepthChart()
 excel = Excel("output_file.xlsm")
