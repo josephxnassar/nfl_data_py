@@ -73,9 +73,10 @@ class ESPNDepthChart:
         for team in self.teams:
             soup = self._get_soup(team)
             positions, players = self._parse_soup(soup)
-            if not positions or not players:
-                print(f"Skipping team {team}: No valid data found.")
-                continue
-            rosters[team] = self._create_depth_chart(positions, players).rename_axis(team)
+            try:
+                rosters[team] = self._create_depth_chart(positions, players).rename_axis(team)
+            except:
+                print("Server error.")
+                sys.exit(1)
             time.sleep(random.randint(2, 10))
         return rosters

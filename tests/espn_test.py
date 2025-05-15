@@ -54,7 +54,7 @@ def test_create_depth_chart_structure():
     assert 'QB' in df.index or 'RB' in df.index
 
 def test_get_depth_charts_single_team(mocker: MockerFixture, fake_soup: BeautifulSoup):
-    mocker.patch.object(ESPNDepthChart, '_get_soup', return_value=fake_soup)
+    mocker.patch.object(ESPNDepthChart, '_get_soup', return_value = fake_soup)
     mocker.patch('time.sleep')  # skip delays
     chart = ESPNDepthChart()
     chart.teams = ['FAKE']

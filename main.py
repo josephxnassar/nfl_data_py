@@ -3,7 +3,7 @@ from core import *
 def main():
     ndp = NDPDepthChart([2024], 18)
     espn = ESPNDepthChart()
-    sc = Schedules([2024])
+    sc = Schedules([2025])
     st = Statistics([2024])
     e = Excel("output.xlsm")
     e.output_dfs(ndp.get_depth_charts(), "Depth Chart NDP")
