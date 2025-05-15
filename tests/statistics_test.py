@@ -5,13 +5,13 @@ import pandas as pd
 
 from collections import defaultdict
 
-from core.statistics import Statistics
+from source.statistics import Statistics
 
 @pytest.fixture
 def mock_nfl_imports(mocker: MockerFixture):
-    mocker.patch("core.statistics.nfl.import_seasonal_rosters")
-    mocker.patch("core.statistics.nfl.import_seasonal_data")
-    mocker.patch("core.statistics.nfl.import_snap_counts")
+    mocker.patch("source.statistics.nfl.import_seasonal_rosters")
+    mocker.patch("source.statistics.nfl.import_seasonal_data")
+    mocker.patch("source.statistics.nfl.import_snap_counts")
     return mocker
 
 @pytest.fixture
@@ -37,20 +37,20 @@ def sample_snaps():
                          'offense_pct': [75.0, 65.0]})
 
 def test_create_key(mock_nfl_imports: MockerFixture, sample_roster: pd.DataFrame):
-    mock_nfl_imports.patch("core.statistics.nfl.import_seasonal_rosters", return_value=sample_roster)
+    mock_nfl_imports.patch("source.statistics.nfl.import_seasonal_rosters", return_value=sample_roster)
     stats = Statistics([2021])
     assert stats.key['id1'] == ('Player One', 'QB')
     assert stats.player_to_pfr['id2'] == 'pfr2'
 
 def test_get_seasonal_data(mock_nfl_imports: MockerFixture, sample_seasonal: pd.DataFrame):
-    mock_nfl_imports.patch("core.statistics.nfl.import_seasonal_data", return_value=sample_seasonal)
+    mock_nfl_imports.patch("source.statistics.nfl.import_seasonal_data", return_value=sample_seasonal)
     stats = Statistics.__new__(Statistics)
     stats.seasons = [2021]
     df = stats._get_seasonal_data()
     assert 'player_id' in df.columns
 
 def test_get_snap_counts(mock_nfl_imports: MockerFixture, sample_snaps: pd.DataFrame):
-    mock_nfl_imports.patch("core.statistics.nfl.import_snap_counts", return_value=sample_snaps)
+    mock_nfl_imports.patch("source.statistics.nfl.import_snap_counts", return_value=sample_snaps)
     stats = Statistics.__new__(Statistics)
     stats.seasons = [2021]
     df = stats._get_snap_counts()
@@ -86,7 +86,7 @@ def test_filter_df_filters_columns():
     assert 'stat2' in result.columns
 
 def test_create_ratings_calls_regression(mocker: MockerFixture):
-    mock_regression = mocker.patch("core.statistics.Regression")
+    mock_regression = mocker.patch("source.statistics.Regression")
     instance = mock_regression.return_value
     instance.get_ratings.return_value = pd.DataFrame({'player_name': ['a'], 'rating': [1.0]})
     stats = Statistics.__new__(Statistics)
@@ -98,10 +98,10 @@ def test_create_ratings_calls_regression(mocker: MockerFixture):
     mock_regression.assert_called_once()
 
 def test_get_statistics_pipeline(mocker: MockerFixture, sample_roster: pd.DataFrame, sample_seasonal: pd.DataFrame, sample_snaps: pd.DataFrame):
-    mocker.patch("core.statistics.nfl.import_seasonal_rosters", return_value = sample_roster)
-    mocker.patch("core.statistics.nfl.import_seasonal_data", return_value = sample_seasonal)
-    mocker.patch("core.statistics.nfl.import_snap_counts", return_value = sample_snaps)
-    mock_regression = mocker.patch("core.statistics.Regression")
+    mocker.patch("source.statistics.nfl.import_seasonal_rosters", return_value = sample_roster)
+    mocker.patch("source.statistics.nfl.import_seasonal_data", return_value = sample_seasonal)
+    mocker.patch("source.statistics.nfl.import_snap_counts", return_value = sample_snaps)
+    mock_regression = mocker.patch("source.statistics.Regression")
     mock_instance = mock_regression.return_value
     mock_instance.get_ratings.return_value = pd.DataFrame({'player_name': ['Player One', 'Player Two'],
                                                            'rating': [1.0, 0.5]}).set_index('player_name')

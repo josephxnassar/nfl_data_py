@@ -2,7 +2,7 @@ import pytest
 
 import pandas as pd
 
-from core.regression import Regression
+from source.regression import Regression
 
 @pytest.fixture
 def sample_data():

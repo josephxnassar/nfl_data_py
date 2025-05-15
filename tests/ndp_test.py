@@ -3,7 +3,7 @@ from pytest_mock import MockerFixture
 
 import pandas as pd
 
-from core.ndpdepthchart import NDPDepthChart
+from source.ndpdepthchart import NDPDepthChart
 
 @pytest.fixture
 def sample_depth_chart():
@@ -16,7 +16,7 @@ def sample_depth_chart():
                          'position': ['QB', 'RB', 'WR', 'TE']})
 
 def test_get_master_depth_chart_filters_and_renames(mocker: MockerFixture, sample_depth_chart: pd.DataFrame):
-    mocker.patch("core.ndpdepthchart.nfl.import_depth_charts", return_value = sample_depth_chart)
+    mocker.patch("source.ndpdepthchart.nfl.import_depth_charts", return_value = sample_depth_chart)
     chart = NDPDepthChart([2021], week=1)
     df = chart.master_depth_chart
     assert 'full_name' in df.columns
@@ -24,7 +24,7 @@ def test_get_master_depth_chart_filters_and_renames(mocker: MockerFixture, sampl
     assert set(df['position']).issubset({'QB', 'RB', 'WR', 'TE'})
 
 def test_partition_teams_returns_dict_of_dataframes(mocker: MockerFixture, sample_depth_chart: pd.DataFrame):
-    mocker.patch("core.ndpdepthchart.nfl.import_depth_charts", return_value = sample_depth_chart)
+    mocker.patch("source.ndpdepthchart.nfl.import_depth_charts", return_value = sample_depth_chart)
     chart = NDPDepthChart([2021], week=1)
     partitions = chart._partition_teams()
     assert isinstance(partitions, dict)
@@ -44,7 +44,7 @@ def test_create_depth_chart_structure():
     assert result.loc['RB', '2nd'] == 'C'
 
 def test_get_depth_charts_pipeline(mocker: MockerFixture, sample_depth_chart: pd.DataFrame):
-    mocker.patch("core.ndpdepthchart.nfl.import_depth_charts", return_value = sample_depth_chart)
+    mocker.patch("source.ndpdepthchart.nfl.import_depth_charts", return_value = sample_depth_chart)
     chart = NDPDepthChart([2021], week=1)
     result = chart.get_depth_charts()
     assert isinstance(result, dict)

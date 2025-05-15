@@ -5,7 +5,7 @@ import pandas as pd
 
 from bs4 import BeautifulSoup
 
-from core.espndepthchart import ESPNDepthChart
+from source.espndepthchart import ESPNDepthChart
 
 @pytest.fixture
 def fake_soup():

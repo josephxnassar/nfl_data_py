@@ -4,7 +4,7 @@ from unittest.mock import MagicMock
 
 import pandas as pd
 
-from core.excel import Excel
+from source.excel import Excel
 
 filename = "dummy.xlsm"
 
@@ -14,15 +14,15 @@ def dfs():
             "Sheet2": pd.DataFrame({"X": [5, 6], "Y": [7, 8]})}
 
 def test_init_file_exists(mocker: MockerFixture):
-    mock_os_path_exists = mocker.patch("core.excel.os.path.exists", return_value = True)
-    mock_xw_book = mocker.patch("core.excel.xw.Book")
+    mock_os_path_exists = mocker.patch("source.excel.os.path.exists", return_value = True)
+    mock_xw_book = mocker.patch("source.excel.xw.Book")
     Excel(filename)
     mock_os_path_exists.assert_called_once_with(filename)
     mock_xw_book.assert_called_once_with(filename)
 
 def test_init_file_doesnt_exist(mocker: MockerFixture):
-    mock_os_path_exists = mocker.patch("core.excel.os.path.exists", return_value = False)
-    mock_xw_book = mocker.patch("core.excel.xw.Book")
+    mock_os_path_exists = mocker.patch("source.excel.os.path.exists", return_value = False)
+    mock_xw_book = mocker.patch("source.excel.xw.Book")
     mock_instance = MagicMock()
     mock_xw_book.return_value = mock_instance
     Excel(filename)
@@ -42,7 +42,7 @@ def test_generate_lookup(dfs: dict):
     assert isinstance(lookup['Sheet1'], str)
 
 def test_output_dfs(mocker: MockerFixture, dfs: dict):
-    mock_xw_book = mocker.patch("core.excel.xw.Book")
+    mock_xw_book = mocker.patch("source.excel.xw.Book")
     mock_sheet = MagicMock()
     mock_sheet.name = "MySheet"
     mock_sheet.used_range.columns = [MagicMock()]
@@ -62,7 +62,7 @@ def test_output_dfs(mocker: MockerFixture, dfs: dict):
     mock_sheet.cells.clear.assert_called_once()
 
 def test_close(mocker: MockerFixture):
-    mock_xw_book = mocker.patch("core.excel.xw.Book")
+    mock_xw_book = mocker.patch("source.excel.xw.Book")
     mock_instance = MagicMock()
     mock_xw_book.return_value = mock_instance
     e = Excel(filename)
