@@ -1,6 +1,6 @@
 # `Excel` Class
 
-The [`Excel`](../core/excel.py) provides a class to output dataframes to an excel workbook using the `xlwings` library.  Each instance of this class should represent one excel file.
+The [`Excel`](../source/excel.py) provides a class to output dataframes to an excel workbook using the `xlwings` library.  Each instance of this class should represent one excel file.
 
 ---
 
@@ -94,7 +94,7 @@ Closes the Excel workbook.
 ## Example Usage
 
 ```python
-from core import Excel
+from source import Excel
 
 excel = Excel("output_file.xlsm")
 excel.output_dfs(dataframes_dict, "output_sheet")
