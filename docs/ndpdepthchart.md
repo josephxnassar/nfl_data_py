@@ -1,6 +1,6 @@
 # `NDPDepthChart` Class
 
-The [`NDPDepthChart`](../core/ndpdepthchart.py) class provides functionality for importing and organizing NFL depth chart data for a given week of the season. Unlike `ESPNDepthChart`, it can be run more frequently but may not reflect the most up-to-date information.
+The [`NDPDepthChart`](../source/ndpdepthchart.py) class provides functionality for importing and organizing NFL depth chart data for a given week of the season. Unlike `ESPNDepthChart`, it can be run more frequently but may not reflect the most up-to-date information.
 
 ---
 
@@ -75,8 +75,8 @@ Builds depth charts for all teams based on the master depth chart.
 ## Example Usage
 
 ```python
-from core import NDPDepthChart
-from core import Excel
+from source import NDPDepthChart
+from source import Excel
 
 ndp = NDPDepthChart([2023], 1)
 excel = Excel("output_file.xlsm")
