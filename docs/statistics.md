@@ -1,6 +1,6 @@
 # `Statistics` Class
 
-The `Statistics` class provides functionality for importing, processing, and analyzing NFL seasonal data. It performs key operations such as merging player data, filtering for relevant statistics, partitioning by player positions, and creating player ratings based on fantasy points.
+The [`Statistics`](../core/statistics.py) class provides functionality for importing, processing, and analyzing NFL seasonal data. It performs key operations such as merging player data, filtering for relevant statistics, partitioning by player positions, and creating player ratings based on fantasy points.
 
 ---
 

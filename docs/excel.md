@@ -1,6 +1,6 @@
 # `Excel` Class
 
-The `Excel` provides a class to output dataframes to an excel workbook using the `xlwings` library.  Each instance of this class should represent one excel file.
+The [`Excel`](../core/excel.py) provides a class to output dataframes to an excel workbook using the `xlwings` library.  Each instance of this class should represent one excel file.
 
 ---
 

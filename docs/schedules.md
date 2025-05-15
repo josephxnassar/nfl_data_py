@@ -1,6 +1,6 @@
 # `Schedules` Class
 
-The `Schedules` class provides functionality for importing and organizing NFL schedule data. It extracts regular season matchups, and partitions them by team..
+The [`Schedules`](../core/schedules.py) class provides functionality for importing and organizing NFL schedule data. It extracts regular season matchups, and partitions them by team..
 
 ---
 

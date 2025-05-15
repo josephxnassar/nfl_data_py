@@ -1,6 +1,6 @@
 # `Regression` Class
 
-The `Regression` class is designed to perform ridge regression on a given dataset and use the resulting model coefficients to calculate a custom rating for each row in the feature set.
+The [`Regression`](../core/regression.py) class is designed to perform ridge regression on a given dataset and use the resulting model coefficients to calculate a custom rating for each row in the feature set.
 
 ---
 

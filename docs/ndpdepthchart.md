@@ -1,6 +1,6 @@
 # `NDPDepthChart` Class
 
-The `NDPDepthChart` class provides functionality for importing and organizing NFL depth chart data for a given week of the season. Unlike `ESPNDepthChart`, it can be run more frequently but may not reflect the most up-to-date information.
+The [`NDPDepthChart`](../core/ndpdepthchart.py) class provides functionality for importing and organizing NFL depth chart data for a given week of the season. Unlike `ESPNDepthChart`, it can be run more frequently but may not reflect the most up-to-date information.
 
 ---
 

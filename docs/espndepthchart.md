@@ -1,6 +1,6 @@
 # `ESPNDepthChart` Class
 
-The `ESPNDepthChart` class scrapes *updated* team depth charts from ESPN's website. It supports generating team-by-team rosters and their depth chart order for relevant offensive positions.
+The [`ESPNDepthChart`](../core/espndepthchart.py) class scrapes *updated* team depth charts from ESPN's website. It supports generating team-by-team rosters and their depth chart order for relevant offensive positions.
 
 ---
 
