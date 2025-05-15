@@ -54,7 +54,7 @@ Additionally, `xlwings` may require Microsoft Excel to be installed locally.
 Your codebase should be structured something like:
 
 ```
-project-core/
+project-source/
 ├── regression.py
 ├── excel.py
 ├── schedules.py
@@ -68,8 +68,8 @@ main.py
 To pull and output depth charts from ESPN:
 
 ```python
-from core import ESPNDepthChart
-from core import Excel
+from source import ESPNDepthChart
+from source import Excel
 
 espn = ESPNDepthChart()
 excel = Excel("output_file.xlsm")
@@ -80,7 +80,7 @@ excel.close()
 To calculate nnd sort statistics by rating:
 
 ```python
-from core import Statistics
+from source import Statistics
 
 stats = Statistics([2024])
 excel = Excel("output_file.xlsm")
