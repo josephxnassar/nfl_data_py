@@ -1,6 +1,6 @@
 # `Schedules` Class
 
-The [`Schedules`](../core/schedules.py) class provides functionality for importing and organizing NFL schedule data. It extracts regular season matchups, and partitions them by team..
+The [`Schedules`](../source/schedules.py) class provides functionality for importing and organizing NFL schedule data. It extracts regular season matchups, and partitions them by team..
 
 ---
 
@@ -90,8 +90,8 @@ Constructs full schedules for each team, including bye weeks. Combines `_partiti
 ## Example Usage
 
 ```python
-from core import Schedules
-from core import Excel
+from source import Schedules
+from source import Excel
 
 schedule = Schedules([2024])
 excel = Excel("output_file.xlsm")
