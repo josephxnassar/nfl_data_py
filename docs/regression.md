@@ -1,6 +1,6 @@
 # `Regression` Class
 
-The [`Regression`](../core/regression.py) class is designed to perform ridge regression on a given dataset and use the resulting model coefficients to calculate a custom rating for each row in the feature set.
+The [`Regression`](../source/regression.py) class is designed to perform ridge regression on a given dataset and use the resulting model coefficients to calculate a custom rating for each row in the feature set.
 
 ---
 
@@ -69,7 +69,7 @@ Adds a `rating` column to the feature DataFrame based on the computed ratings an
 ## Example Usage
 
 ```python
-from core import Regression
+from source import Regression
 import xlwings as xw
 
 # Single df
