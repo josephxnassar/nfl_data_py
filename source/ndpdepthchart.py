@@ -3,9 +3,9 @@ import pandas as pd
 
 from collections import defaultdict
 
-from urllib.error import HTTPError
-import inspect
-import sys
+import logging
+
+logger = logging.getLogger(__name__)
 
 class NDPDepthChart:
     def __init__(self, seasons: list, week: int):
@@ -14,13 +14,8 @@ class NDPDepthChart:
         self.master_depth_chart = self._get_master_depth_chart()
 
     def _get_master_depth_chart(self) -> pd.DataFrame:
-        try:
-            dc = nfl.import_depth_charts(self.seasons)
-            return dc[(dc['week'] == self.week) & (dc['formation'] == 'Offense')].assign(full_name=lambda x: x['football_name'].str.cat(x['last_name'], sep=' ')).sort_values(by=['club_code', 'depth_team', 'position'])[['club_code', 'depth_team', 'position', 'full_name']]
-        except HTTPError as e:
-            function_name = inspect.currentframe().f_code.co_name
-            print(f"Exception in {function_name}: {e}")
-            sys.exit(1)
+        dc = nfl.import_depth_charts(self.seasons)
+        return dc[(dc['week'] == self.week) & (dc['formation'] == 'Offense')].assign(full_name=lambda x: x['football_name'].str.cat(x['last_name'], sep=' ')).sort_values(by=['club_code', 'depth_team', 'position'])[['club_code', 'depth_team', 'position', 'full_name']]
 
     def _partition_teams(self) -> dict:
         team_dataframes = defaultdict(list)

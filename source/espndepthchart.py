@@ -3,6 +3,10 @@ import pandas as pd
 import requests
 from bs4 import BeautifulSoup
 
+import logging
+
+logger = logging.getLogger(__name__)
+
 class ESPNDepthChart:
     def __init__(self):
         self.teams = ["ARI", "ATL", "BAL", "BUF", "CAR", "CHI", "CIN", "CLE",
@@ -56,43 +60,22 @@ class ESPNDepthChart:
 
         return pd.DataFrame(rows).set_index("Position").replace(r'(Q|D|O|IR|PUP|NFI|SUS)$', '', regex=True)
 
-    def _create_depth_chart(self, positions: list, players: list) -> pd.DataFrame:
-        roster = {}
-        for idx, pos in enumerate(positions):
-            if pos in ['QB', 'RB', 'WR', 'TE']:
-                start_idx = idx * 4
-                group = players[start_idx:start_idx + 4]
-                if pos not in roster:
-                    roster[pos] = []
-                roster[pos].append(group)
-                
-        rows = []
-        for pos, position_group in roster.items():
-            for g in position_group:
-                rows.append({'Position': pos,
-                            'Starter':  g[0] if len(g) > 0 else None,
-                            '2nd':      g[1] if len(g) > 1 else None,
-                            '3rd':      g[2] if len(g) > 2 else None,
-                            '4th':      g[3] if len(g) > 3 else None})
-
-        return pd.DataFrame(rows).set_index("Position").replace(r'(Q|D|O|IR|PUP|NFI|SUS)$', '', regex=True)
-
     def get_depth_charts(self) -> dict:
         rosters = {}
         for team in self.teams:
             try:
                 soup = self._get_soup(team)
             except Exception as e:
-                print(f"[_get_soup] Error for {team}: {e}")
+                logger.warning(f"[_get_soup] exception for {team}: {e}")
                 continue
             try:
                 positions, players = self._parse_soup(soup)
             except Exception as e:
-                print(f"[_parse_soup] Error for {team}: {e}")
+                logger.warning(f"[_parse_soup] exception for {team}: {e}")
                 continue
             try:
                 rosters[team] = self._create_depth_chart(positions, players).rename_axis(team)
             except Exception as e:
-                print(f"[_create_depth_chart] Error for {team}: {e}")
+                logger.warning(f"[_create_depth_chart] exception for {team}: {e}")
                 continue
         return rosters

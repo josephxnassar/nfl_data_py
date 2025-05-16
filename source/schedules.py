@@ -3,9 +3,9 @@ import pandas as pd
 
 from collections import defaultdict
 
-from urllib.error import HTTPError
-import inspect
-import sys
+import logging
+
+logger = logging.getLogger(__name__)
 
 class Schedules:
     def __init__(self, seasons: list):
@@ -14,13 +14,8 @@ class Schedules:
         self.weeks = self._get_weeks()
 
     def _get_master_schedule(self) -> pd.DataFrame:
-        try:
-            s = nfl.import_schedules(self.seasons)
-            return s[s['game_type'] == 'REG'][['week', 'away_team', 'home_team']]
-        except HTTPError as e:
-            function_name = inspect.currentframe().f_code.co_name
-            print(f"Exception in {function_name}: {e}")
-            sys.exit(1)
+        s = nfl.import_schedules(self.seasons)
+        return s[s['game_type'] == 'REG'][['week', 'away_team', 'home_team']]
 
     def _get_weeks(self) -> int:
         return self.master_schedule['week'].nunique()

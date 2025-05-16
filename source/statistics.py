@@ -3,11 +3,11 @@ import pandas as pd
 
 from collections import defaultdict
 
-from urllib.error import HTTPError
-import inspect
-import sys
-
 from .regression import Regression
+
+import logging
+
+logger = logging.getLogger(__name__)
 
 class Statistics:
     def __init__(self, seasons: list):
@@ -17,42 +17,24 @@ class Statistics:
         self.snap_counts = self._get_snap_counts()
 
     def _create_key(self) -> dict:
-        try:
-            sr = nfl.import_seasonal_rosters(self.seasons, columns=['player_id', 'pfr_id', 'player_name', 'depth_chart_position'])
+        sr = nfl.import_seasonal_rosters(self.seasons, columns=['player_id', 'pfr_id', 'player_name', 'depth_chart_position'])
 
-            key = defaultdict(lambda: None)
-            player_to_pfr = defaultdict(lambda: None)
-            for row in sr.itertuples(index=False):
-                key[row.player_id] = (row.player_name, row.depth_chart_position)
-                if row.pfr_id:
-                    player_to_pfr[row.player_id] = row.pfr_id
-            return key, player_to_pfr
-        except HTTPError as e:
-            if e.code == 404:
-                function_name = inspect.currentframe().f_code.co_name
-                print(f"Exception in {function_name}: {e}")
-                sys.exit(1)
+        key = defaultdict(lambda: None)
+        player_to_pfr = defaultdict(lambda: None)
+        for row in sr.itertuples(index=False):
+            key[row.player_id] = (row.player_name, row.depth_chart_position)
+            if row.pfr_id:
+                player_to_pfr[row.player_id] = row.pfr_id
+        return key, player_to_pfr
     
     def _get_seasonal_data(self) -> pd.DataFrame:
-        try:
-            sd = nfl.import_seasonal_data(self.seasons)
-            return sd.drop(columns=['season', 'season_type']).groupby('player_id').mean().reset_index()
-        except HTTPError as e:
-            if e.code == 404:
-                function_name = inspect.currentframe().f_code.co_name
-                print(f"Exception in {function_name}: {e}")
-                sys.exit(1)
+        sd = nfl.import_seasonal_data(self.seasons)
+        return sd.drop(columns=['season', 'season_type']).groupby('player_id').mean().reset_index()
 
     def _get_snap_counts(self) -> pd.DataFrame:
-        try:
-            sc = nfl.import_snap_counts(self.seasons)
-            return sc[['pfr_player_id', 'offense_snaps', 'offense_pct']].groupby('pfr_player_id').mean().reset_index()
-        except HTTPError as e:
-            if e.code == 404:
-                function_name = inspect.currentframe().f_code.co_name
-                print(f"Exception in {function_name}: {e}")
-                sys.exit(1)
-
+        sc = nfl.import_snap_counts(self.seasons)
+        return sc[['pfr_player_id', 'offense_snaps', 'offense_pct']].groupby('pfr_player_id').mean().reset_index()
+ 
     def _merge(self) -> pd.DataFrame:
         self.seasonal_data['pfr_id'] = self.seasonal_data['player_id'].map(self.player_to_pfr)
         return pd.merge(self.seasonal_data, self.snap_counts.rename(columns={'pfr_player_id': 'pfr_id'}), on='pfr_id', how='left').drop(columns=['pfr_id']).dropna()
