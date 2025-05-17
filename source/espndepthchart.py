@@ -4,15 +4,13 @@ import requests
 from bs4 import BeautifulSoup
 
 import logging
+import traceback
 
 logger = logging.getLogger(__name__)
 
 class ESPNDepthChart:
     def __init__(self):
-        self.teams = ["ARI", "ATL", "BAL", "BUF", "CAR", "CHI", "CIN", "CLE",
-                      "DAL", "DEN", "DET", "GB", "HOU", "IND", "JAX", "KC",
-                      "LV", "LAC", "LAR", "MIA", "MIN", "NE", "NO", "NYG",
-                      "NYJ", "PHI", "PIT", "SF", "SEA", "TB", "TEN", "WSH"]
+        self.teams = ["ARI", "ATL", "BAL", "BUF", "CAR", "CHI", "CIN", "CLE", "DAL", "DEN", "DET", "GB", "HOU", "IND", "JAX", "KC", "LV", "LAC", "LAR", "MIA", "MIN", "NE", "NO", "NYG", "NYJ", "PHI", "PIT", "SF", "SEA", "TB", "TEN", "WSH"]
 
     def _get_soup(self, team: str):
         url = f"https://www.espn.com/nfl/team/depth/_/name/{team}"
@@ -60,22 +58,14 @@ class ESPNDepthChart:
 
         return pd.DataFrame(rows).set_index("Position").replace(r'(Q|D|O|IR|PUP|NFI|SUS)$', '', regex=True)
 
-    def get_depth_charts(self) -> dict:
+    def execute(self) -> dict:
         rosters = {}
         for team in self.teams:
             try:
                 soup = self._get_soup(team)
-            except Exception as e:
-                logger.warning(f"[_get_soup] exception for {team}: {e}")
-                continue
-            try:
                 positions, players = self._parse_soup(soup)
-            except Exception as e:
-                logger.warning(f"[_parse_soup] exception for {team}: {e}")
-                continue
-            try:
                 rosters[team] = self._create_depth_chart(positions, players).rename_axis(team)
             except Exception as e:
-                logger.warning(f"[_create_depth_chart] exception for {team}: {e}")
-                continue
+                tb = traceback.format_exc(limit=1)
+                logger.warning(f"[execute] {team} failed: {type(e).__name__} - {e}\nContext: {tb}")
         return rosters

@@ -56,9 +56,9 @@ class Statistics:
     def _create_ratings(self, df: pd.DataFrame) -> pd.DataFrame:
         y = df["fantasy_points_ppr"]
         X = df.drop(columns=["fantasy_points", "fantasy_points_ppr"])
-        return Regression(X, y).get_ratings()
+        return Regression(X, y).execute()
     
-    def get_statistics(self) -> dict:
+    def execute(self) -> dict:
         df = self._merge()
         dfs = self._partition(df)
         for pos in dfs.keys():

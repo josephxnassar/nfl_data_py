@@ -29,6 +29,6 @@ class Regression:
     def _calculate_rating(self) -> pd.Series:
         return self.X.apply(lambda row: sum(row[col] * self.weights[col] for col in row.index if col in self.weights), axis=1)
     
-    def get_ratings(self):
+    def execute(self):
         self.X['rating'] = self._calculate_rating()
         return self.X.sort_values(by='rating', ascending=False)

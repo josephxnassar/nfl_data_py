@@ -1,40 +1,30 @@
 import nfl_data_py as nfl
 import pandas as pd
-
-from collections import defaultdict
-
 import logging
 
 logger = logging.getLogger(__name__)
 
 class Schedules:
-    def __init__(self, seasons: list):
+    def __init__(self, seasons: list[int]):
         self.seasons = seasons
-        self.master_schedule = self._get_master_schedule()
-        self.weeks = self._get_weeks()
+        self.master_schedule = self._load()
+        self.weeks = self.master_schedule['week'].nunique()
 
-    def _get_master_schedule(self) -> pd.DataFrame:
-        s = nfl.import_schedules(self.seasons)
-        return s[s['game_type'] == 'REG'][['week', 'away_team', 'home_team']]
+    def _load(self) -> pd.DataFrame:
+        df = nfl.import_schedules(self.seasons)
+        return df[df['game_type'] == 'REG'][['week', 'away_team', 'home_team']]
 
-    def _get_weeks(self) -> int:
-        return self.master_schedule['week'].nunique()
+    def _split_schedules_by_team(self) -> dict[str, pd.DataFrame]:
+        home_games = self.master_schedule.rename(columns={'away_team': 'Opponent', 'home_team': 'Team'})
+        away_games = self.master_schedule.rename(columns={'home_team': 'Opponent', 'away_team': 'Team'})
+        combined = pd.concat([home_games, away_games], ignore_index=True)
+        grouped = combined.groupby('Team')
+        return {team: group.drop(columns='Team').set_index('week').sort_index().rename_axis(team) for team, group in grouped}
 
-    def _partition_schedules(self) -> dict:
-        team_dataframes = defaultdict(list)
-        for _, row in self.master_schedule.iterrows():
-            week, away, home = row['week'], row['away_team'], row['home_team']
-            team_dataframes[home].append((week, away))
-            team_dataframes[away].append((week, home))
-        return {team: pd.DataFrame(games, columns=['week', 'Opponent']).set_index('week').rename_axis(team).sort_index() for team, games in team_dataframes.items()}
-
-    def _get_bye_weeks(self, df: pd.DataFrame) -> pd.DataFrame:
-        all_weeks = pd.Index(range(1, self.weeks + 1), name=df.index.name)
+    def _fill_bye_weeks(self, df: pd.DataFrame, team: str) -> pd.DataFrame:
+        all_weeks = pd.Index(range(1, self.weeks + 1), name=team)
         return df.reindex(all_weeks, fill_value="BYE").sort_index()
 
-    def get_schedules(self) -> dict:
-        team_dfs = self._partition_schedules()
-        schedules = {}
-        for team, df in team_dfs.items():
-            schedules[team] = self._get_bye_weeks(df)
-        return schedules
+    def get_team_schedules(self) -> dict[str, pd.DataFrame]:
+        team_games = self._split_schedules_by_team()
+        return {team: self._fill_bye_weeks(df, team) for team, df in team_games.items()}
