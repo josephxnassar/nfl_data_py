@@ -4,6 +4,11 @@ from sklearn.linear_model import Ridge
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import StandardScaler
 
+import logging
+import traceback
+
+logger = logging.getLogger(__name__)
+
 class Regression:
     def __init__(self, X: pd.DataFrame, y: pd.Series):
         self.X = X

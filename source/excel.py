@@ -3,6 +3,11 @@ import pandas as pd
 import os
 import xlwings as xw
 
+import logging
+import traceback
+
+logger = logging.getLogger(__name__)
+
 class Excel:
     def __init__(self, filename: str):
         if os.path.exists(filename):

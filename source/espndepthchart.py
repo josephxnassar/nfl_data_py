@@ -58,7 +58,7 @@ class ESPNDepthChart:
 
         return pd.DataFrame(rows).set_index("Position").replace(r'(Q|D|O|IR|PUP|NFI|SUS)$', '', regex=True)
 
-    def execute(self) -> dict:
+    def get_depth_charts(self) -> dict:
         rosters = {}
         for team in self.teams:
             try:

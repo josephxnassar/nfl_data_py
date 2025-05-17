@@ -4,6 +4,7 @@ import pandas as pd
 from collections import defaultdict
 
 import logging
+import traceback
 
 logger = logging.getLogger(__name__)
 
@@ -17,7 +18,7 @@ class NDPDepthChart:
         dc = nfl.import_depth_charts(self.seasons)
         return dc[(dc['week'] == self.week) & (dc['formation'] == 'Offense')].assign(full_name=lambda x: x['football_name'].str.cat(x['last_name'], sep=' ')).sort_values(by=['club_code', 'depth_team', 'position'])[['club_code', 'depth_team', 'position', 'full_name']]
 
-    def execute(self) -> dict[str, pd.DataFrame]:
+    def get_depth_charts(self) -> dict[str, pd.DataFrame]:
         depth_charts = {}
         for team, group in self._load().groupby('club_code'):
             position_players = defaultdict(list)

@@ -1,6 +1,8 @@
 import nfl_data_py as nfl
 import pandas as pd
+
 import logging
+import traceback
 
 logger = logging.getLogger(__name__)
 
